@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 function Home() {
   const [inputType, setInputType] = useState("text");
   const [interview, setInterview] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const [file, setFile] = useState(null);
 
@@ -13,6 +14,7 @@ function Home() {
     e.preventDefault();
 
     try {
+      setIsAnalyzing(true);
       const { data } = await axios.post(
         "http://localhost:3000/api/v1/agent/agent",
         {
@@ -41,6 +43,7 @@ function Home() {
         console.log("Please select a file.");
         return;
       }
+      setIsAnalyzing(true);
       const formData = new FormData();
 
       formData.append("interview", file);
@@ -89,6 +92,31 @@ function Home() {
           technology coverage, strengths, weaknesses and improved answers.
         </p>
       </section>
+
+      {isAnalyzing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="w-[360px] rounded-2xl bg-white px-8 py-8 text-center shadow-2xl">
+            {/* Spinner */}
+            <div className="mx-auto mb-5 h-10 w-10 animate-spin rounded-full border-4 border-purple-100 border-t-purple-500"></div>
+
+            <h2 className="text-lg font-bold text-[#11152f]">
+              Analyzing Interview
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-gray-500">
+              Our AI is reviewing your interview and preparing your feedback.
+            </p>
+
+            <div className="mt-5 flex items-center justify-center gap-1">
+              <span className="h-2 w-2 animate-bounce rounded-full bg-purple-500"></span>
+
+              <span className="h-2 w-2 animate-bounce rounded-full bg-purple-500 [animation-delay:150ms]"></span>
+
+              <span className="h-2 w-2 animate-bounce rounded-full bg-purple-500 [animation-delay:300ms]"></span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Analyzer */}
       <section className="mx-auto mt-10 max-w-4xl px-6">
